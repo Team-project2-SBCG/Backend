@@ -25,7 +25,10 @@ public class User implements UserDetails {
 
     @Column(name = "password", length = 100, nullable = false)
     private String userPwd;
-//
+
+
+
+
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @Builder.Default
 //    private List<String> roles = new ArrayList<>();

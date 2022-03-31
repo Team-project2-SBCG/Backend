@@ -49,6 +49,16 @@ public class LoginController {
                     .build()).getId()));
         }
     }
+//    // 회원가입
+//    @PostMapping("/join")
+//    @ResponseBody
+//    public Long join(@RequestBody SignInDto signInDto) {
+//        return userRepository.save(User.builder()
+//                .userName(signInDto.getUsername())
+//                .userPwd(passwordEncoder.encode(signInDto.getPassword()))
+//                //.roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
+//                .build()).getId();
+//    }
 
     // 로그인
     @PostMapping("/login")
@@ -62,6 +72,34 @@ public class LoginController {
         return jwtTokenProvider.createToken(member.getUsername()); // , member.getRoles()
     }
 
+    // 회원탈퇴
+    @PostMapping("/withdraw")
+    @ResponseBody
+    public boolean withdraw(@RequestBody SignInDto signInDto){
+        System.out.println("회원탈퇴를 진행합니다. ");
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+        String username = ((UserDetails) principal).getUsername();
+        String password = ((UserDetails) principal).getPassword();
+        System.out.println("탈퇴 name:" + username);
+
+        Optional<User> findUser = userRepository.findByUserName(username);
+        if(findUser.isPresent()) {
+            if(findUser.get().getPassword().equals(password)) {
+                userRepository.deleteById(findUser.get().getId());
+                return true;
+            }
+            return false;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * ******************************************************************************************************
+     * @param authentication
+     * @return
+     */
     /*
         테스트 api
      */
@@ -71,9 +109,10 @@ public class LoginController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return userDetails.getUsername();
     }
+
     /*
-            테스트 api
-         */
+       테스트 api
+    */
     @GetMapping("/userinfotest")
     @ResponseBody
     public void test(){
