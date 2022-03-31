@@ -13,7 +13,11 @@ repositories {
 }
 
 dependencies {
+	// lombok 설정 추가
 	implementation 'org.projectlombok:lombok'
+
+	// jwt 설정 추가
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
