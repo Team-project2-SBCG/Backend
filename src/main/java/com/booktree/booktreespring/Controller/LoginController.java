@@ -35,7 +35,7 @@ public class LoginController {
     }
 
     /**
-     * 로그인 api
+     * 회원가입 api
      */
     @PostMapping("/join")
     @ResponseBody

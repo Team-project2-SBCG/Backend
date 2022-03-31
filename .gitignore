@@ -10,6 +10,15 @@ build/
 *.yml
 application.yml
 
+### .txt ###
+devLog.txt
+*.txt
+
+### image file ###
+*.png
+*.jpg
+*.jpeg
+
 ### STS ###
 .apt_generated
 .classpath

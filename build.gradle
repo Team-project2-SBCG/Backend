@@ -39,6 +39,12 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	implementation group: 'org.springframework', name: 'spring-test', version: '3.1.1.RELEASE'
+
+	// 파일 변환 의존성
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
 }
 
 tasks.named('test') {

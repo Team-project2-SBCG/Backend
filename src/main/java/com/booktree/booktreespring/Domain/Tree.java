@@ -19,7 +19,7 @@ public class Tree {
     @GeneratedValue
     private Long id;            // 트리 id
 
-    private String username;    // 작성자 이름
+    private String userName;    // 작성자 이름
     private String title;       // 트리 제목
     private String explanation; // 상세 설명
     private int upCnt;          // 좋아요 개수

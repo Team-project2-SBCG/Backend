@@ -1,12 +1,12 @@
 package com.booktree.booktreespring.Domain.Dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProfileDto {
     private Long id;
     private String username;

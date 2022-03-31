@@ -27,7 +27,7 @@ public class User implements UserDetails {
     private String userPwd;
 
     @Column(name = "tree_id")
-    private Long treeId;
+    private Long treeId;    // 보유하고 있는 tree
 
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @Builder.Default
