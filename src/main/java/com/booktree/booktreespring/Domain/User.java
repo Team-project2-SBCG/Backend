@@ -26,8 +26,8 @@ public class User implements UserDetails {
     @Column(name = "password", length = 100, nullable = false)
     private String userPwd;
 
-
-
+    @Column(name = "tree_id")
+    private Long treeId;
 
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @Builder.Default
@@ -76,5 +76,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

@@ -118,7 +118,6 @@ public class LoginController {
     public void test(){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
-
         String username = ((UserDetails) principal).getUsername();
         String password = ((UserDetails) principal).getPassword();
         System.out.println(username);
