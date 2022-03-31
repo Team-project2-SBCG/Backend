@@ -34,9 +34,6 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
-    @Column(name="role", nullable = false)
-    private String userRole;
-
     // override
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
