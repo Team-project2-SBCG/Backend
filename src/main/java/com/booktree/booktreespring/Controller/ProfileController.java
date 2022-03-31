@@ -44,7 +44,7 @@ public class ProfileController {
     }
 
     /**
-     * 아이디 변경 api
+     * 사용자 아이디 변경 api
      */
     @PutMapping("/userInfo")
     @ResponseBody

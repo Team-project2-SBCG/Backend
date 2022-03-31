@@ -34,7 +34,9 @@ public class LoginController {
         this.userRepository = userRepository;
     }
 
-    // 회원가입
+    /**
+     * 로그인 api
+     */
     @PostMapping("/join")
     @ResponseBody
     public ResponseEntity<? extends BasicResponse> join(@RequestBody SignInDto signInDto) {
@@ -60,7 +62,9 @@ public class LoginController {
 //                .build()).getId();
 //    }
 
-    // 로그인
+    /**
+     * 로그인 api
+     */
     @PostMapping("/login")
     @ResponseBody
     public String login(@RequestBody SignInDto signInDto) {
@@ -72,7 +76,9 @@ public class LoginController {
         return jwtTokenProvider.createToken(member.getUsername()); // , member.getRoles()
     }
 
-    // 회원탈퇴
+    /**
+     * 회원탈퇴 api
+     */
     @PostMapping("/withdraw")
     @ResponseBody
     public boolean withdraw(@RequestBody SignInDto signInDto){
