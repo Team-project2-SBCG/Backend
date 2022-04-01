@@ -9,3 +9,7 @@
 파베가 나을듯. AWS 너무 많이 돌리는 중이라 부담임.
 2. 내일 안드 팀원이랑 맞춰보기.
 3. 파이어베이스 연동은 아래 블로그에서 많은 도움을 받았다. https://popawaw.tistory.com/264
+
+요청 헤더 양식
+Content-Type: application/json
+X-AUTH-TOKEN: jwt~~~~
