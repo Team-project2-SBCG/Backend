@@ -8,13 +8,8 @@ import com.booktree.booktreespring.Repository.BookRepository;
 import com.booktree.booktreespring.Repository.TreeRepository;
 import com.booktree.booktreespring.Service.FileService;
 import com.booktree.booktreespring.Service.FireBaseService;
-import com.booktree.booktreespring.Util.BasicResponse;
-import com.booktree.booktreespring.Util.CommonResponse;
 import com.google.firebase.auth.FirebaseAuthException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -24,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 public class TreeController {
@@ -41,7 +37,7 @@ public class TreeController {
         this.fireBaseService = fireBaseService;
     }
 
-    String filePath = "C:\\Users\\choi\\Desktop\\booktree\\booktree-spring\\src\\main\\java\\com\\booktree\\booktreespring\\Image\\";
+    // String filePath = "C:\\Users\\choi\\Desktop\\booktree\\booktree-spring\\src\\main\\java\\com\\booktree\\booktreespring\\Image\\";
     /**
      * 내 트리 정보 가져오기
      */
@@ -68,33 +64,18 @@ public class TreeController {
     }
 
 
-    /**
-     * 파이어베이스 이용 api
-     */
-    @PostMapping("/files")
-    @ResponseBody
-    public String uploadFile(@RequestBody MultipartFile file) throws IOException, FirebaseAuthException {
-        if(file.isEmpty()){
-            return "is empty";
-        }
-        return fireBaseService.uploadFiles(file);
-    }
-
-
-    /**
-     *  트리 장식(책)의 이미지 반환
-     */
-    @GetMapping("/tree/decoration/image")
-    @CrossOrigin("*")
-    @ResponseBody
-    public ResponseEntity<? extends BasicResponse> getDecorationImageController(@RequestBody String filename) throws IOException {
-        System.out.println("찾는 파일의 이름: " + filename);
-
-        Resource resource1 = new FileSystemResource(filePath + filename);
-        return ResponseEntity.ok().body(new CommonResponse<>(resource1));
-        // return ResponseEntity.ok().body(new CommonResponse<>(true));
-        //return ResponseEntity.ok().body(new CommonResponse<>(fileService.getFile(filename)));
-    }
+//    /**
+//     *  트리 장식(책)의 이미지 반환
+//     */
+//    @GetMapping("/tree/decoration/image")
+//    @CrossOrigin("*")
+//    @ResponseBody
+//    public ResponseEntity<? extends BasicResponse> getDecorationImageController(@RequestBody String filename) throws IOException {
+//        System.out.println("찾는 파일의 이름: " + filename);
+//
+//        Resource resource1 = new FileSystemResource(filePath + filename);
+//        return ResponseEntity.ok().body(new CommonResponse<>(resource1));
+//    }
 
 //    @GetMapping("/tree/decoration/image")
 //    @ResponseBody
@@ -153,12 +134,14 @@ public class TreeController {
 //    }
 
     /**
-     * 트리에 장식 달기
+     * 트리에 장식 달기 - 수정예정 - 파베 섞어서 써야함.
      */
     @PostMapping("/tree/book")
     @ResponseBody
-    public Book addBookController(@ModelAttribute BookDto bookDto){
-        String filename = fileService.uploadFile(bookDto.getFile());
+    public Book addBookController(@ModelAttribute BookDto bookDto) throws IOException, FirebaseAuthException {
+        MultipartFile multipartFile = bookDto.getFile();
+        String filename = UUID.randomUUID().toString() + ".jpg";
+        String url = fireBaseService.uploadFiles(multipartFile, filename);
 
         Book newBook = Book.builder()
                 .ownerName(bookDto.getOwnerName())
@@ -166,9 +149,34 @@ public class TreeController {
                 .content(bookDto.getContent())
                 .score(bookDto.getScore())
                 .filename(filename)
+                .firebaseUrl(url)
                 .build();
 
         return bookRepository.save(newBook);
+    }
+
+//    /**
+//     * 트리 장식 저장 -파이어베이스 연동 api
+//     */
+//    @PostMapping("/files")
+//    @ResponseBody
+//    public String uploadFile(@RequestBody MultipartFile file) throws IOException, FirebaseAuthException {
+//        if(file.isEmpty()){
+//            return "is empty";
+//        }
+//        return fireBaseService.uploadFiles(file);
+//    }
+
+    /**
+     * 트리 좋아요 기능
+     */
+    @PostMapping("/tree/like")
+    @ResponseBody
+    public Tree treeLikeController(@RequestBody String ownerName){
+        Optional<Tree> findTree = treeRepository.findByUserName(ownerName);
+        Tree tree = findTree.get();
+        tree.setUpCnt(tree.getUpCnt() + 1);
+        return treeRepository.save(tree);
     }
 
 //

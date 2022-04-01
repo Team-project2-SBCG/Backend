@@ -11,15 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.UUID;
 
 @Service
 public class FireBaseService {
     @Value("${app.firebase-bucket}")
     private String firebaseBucket;
 
-    public String uploadFiles(MultipartFile file) throws IOException, FirebaseAuthException {
-        String nameFile = UUID.randomUUID().toString() + ".jpg";
+    public String uploadFiles(MultipartFile file, String nameFile) throws IOException, FirebaseAuthException {
 
         Bucket bucket = StorageClient.getInstance().bucket(firebaseBucket);
         InputStream content = new ByteArrayInputStream(file.getBytes());

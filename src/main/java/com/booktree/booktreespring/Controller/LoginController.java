@@ -9,12 +9,10 @@ import com.booktree.booktreespring.Util.CommonResponse;
 import com.booktree.booktreespring.Util.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,20 +45,9 @@ public class LoginController {
             return ResponseEntity.ok().body(new CommonResponse<>(userRepository.save(User.builder()
                     .userName(signInDto.getUsername())
                     .userPwd(passwordEncoder.encode(signInDto.getPassword()))
-                    //.roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
                     .build()).getId()));
         }
     }
-//    // 회원가입
-//    @PostMapping("/join")
-//    @ResponseBody
-//    public Long join(@RequestBody SignInDto signInDto) {
-//        return userRepository.save(User.builder()
-//                .userName(signInDto.getUsername())
-//                .userPwd(passwordEncoder.encode(signInDto.getPassword()))
-//                //.roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
-//                .build()).getId();
-//    }
 
     /**
      * 로그인 api
@@ -99,34 +86,5 @@ public class LoginController {
         }else{
             return false;
         }
-    }
-
-    /**
-     * ******************************************************************************************************
-     * @param authentication
-     * @return
-     */
-    /*
-        테스트 api
-     */
-    @GetMapping("/username")
-    @ResponseBody
-    public String currentUserName(Authentication authentication){
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return userDetails.getUsername();
-    }
-
-    /*
-       테스트 api
-    */
-    @GetMapping("/userinfotest")
-    @ResponseBody
-    public void test(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails)principal;
-        String username = ((UserDetails) principal).getUsername();
-        String password = ((UserDetails) principal).getPassword();
-        System.out.println(username);
-        System.out.println(password);
     }
 }

@@ -3,3 +3,9 @@
 2. jwt개발 관련해서 https://llshl.tistory.com/28 위 사이트에서 도움을 많이 받았다.
 3. springsecurity 관련해서 https://webfirewood.tistory.com/115 해당 블로그의 도움을 많이 받았다.
 
+2022-04-01
+1. 파이어베이스 연동하기로함. chain.doFilter 에서 nullpointerException나오는데 하루종일 잡아보려해도
+못잡음. 결국 S3 쓸것이냐. 파베쓸것이냐 중에서 파베 쓰기로함? 왜냐면? 프리티어 거의 다 쓰기 직전이라
+파베가 나을듯. AWS 너무 많이 돌리는 중이라 부담임.
+2. 내일 안드 팀원이랑 맞춰보기.
+3. 파이어베이스 연동은 아래 블로그에서 많은 도움을 받았다. https://popawaw.tistory.com/264
