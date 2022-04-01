@@ -1,6 +1,8 @@
 package com.booktree.booktreespring.Service;
 
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
@@ -13,6 +15,8 @@ import java.nio.file.Files;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class FileService {
     String filePath = "C:\\Users\\choi\\Desktop\\booktree\\booktree-spring\\src\\main\\java\\com\\booktree\\booktreespring\\Image\\";
     /**

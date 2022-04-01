@@ -7,16 +7,21 @@ import com.booktree.booktreespring.Domain.Tree;
 import com.booktree.booktreespring.Repository.BookRepository;
 import com.booktree.booktreespring.Repository.TreeRepository;
 import com.booktree.booktreespring.Service.FileService;
+import com.booktree.booktreespring.Service.FireBaseService;
+import com.booktree.booktreespring.Util.BasicResponse;
+import com.booktree.booktreespring.Util.CommonResponse;
+import com.google.firebase.auth.FirebaseAuthException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,12 +31,14 @@ public class TreeController {
     private final TreeRepository treeRepository;
     private final FileService fileService;
     private final BookRepository bookRepository;
+    private final FireBaseService fireBaseService;
 
     @Autowired
-    public TreeController(TreeRepository treeRepository, FileService fileService, BookRepository bookRepository) {
+    public TreeController(TreeRepository treeRepository, FileService fileService, BookRepository bookRepository, FireBaseService fireBaseService) {
         this.treeRepository = treeRepository;
         this.fileService = fileService;
         this.bookRepository = bookRepository;
+        this.fireBaseService = fireBaseService;
     }
 
     String filePath = "C:\\Users\\choi\\Desktop\\booktree\\booktree-spring\\src\\main\\java\\com\\booktree\\booktreespring\\Image\\";
@@ -60,34 +67,54 @@ public class TreeController {
         return findBook;
     }
 
-//    /**
-//     *  책의 이미지 반환
-//     */
+
+    /**
+     * 파이어베이스 이용 api
+     */
+    @PostMapping("/files")
+    @ResponseBody
+    public String uploadFile(@RequestBody MultipartFile file) throws IOException, FirebaseAuthException {
+        if(file.isEmpty()){
+            return "is empty";
+        }
+        return fireBaseService.uploadFiles(file);
+    }
+
+
+    /**
+     *  트리 장식(책)의 이미지 반환
+     */
+    @GetMapping("/tree/decoration/image")
+    @CrossOrigin("*")
+    @ResponseBody
+    public ResponseEntity<? extends BasicResponse> getDecorationImageController(@RequestBody String filename) throws IOException {
+        System.out.println("찾는 파일의 이름: " + filename);
+
+        Resource resource1 = new FileSystemResource(filePath + filename);
+        return ResponseEntity.ok().body(new CommonResponse<>(resource1));
+        // return ResponseEntity.ok().body(new CommonResponse<>(true));
+        //return ResponseEntity.ok().body(new CommonResponse<>(fileService.getFile(filename)));
+    }
+
 //    @GetMapping("/tree/decoration/image")
 //    @ResponseBody
-//    public MultipartFile getDecorationImageController(@RequestBody String filename) throws IOException {
-//        System.out.println("찾는 파일의 이름: " + filename);
-//        return fileService.getFile(filename);
-////
-////        MultipartFile multipartFile = new MockMultipartFile(filename, new FileInputStream(new File(filePath + filename)));
-////        return multipartFile;
+//    public MultipartFile processImg(@RequestBody String filename) throws IOException {
+//        UrlResource urlResource = null;
+//        try {
+//            urlResource = new UrlResource("file:" + createPath(filename));
+//        }catch(MalformedURLException e){
+//            e.printStackTrace();
+//        }
+//        File file = urlResource.getFile();
+//        System.out.println(file.toString());
+//        FileItem fileItem = new DiskFileItem("file", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length(), file.getParentFile());
+//        MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
+//        return multipartFile;
 //    }
-
-    @GetMapping("/tree/decoration/image")
-    @ResponseBody
-    public Resource processImg(@RequestBody String filename) throws IOException {
-        UrlResource urlResource = null;
-        try {
-            urlResource = new UrlResource("file:" + createPath(filename));
-        }catch(MalformedURLException e){
-            e.printStackTrace();
-        }
-        return urlResource;
-    }
-    // 파일 경로 구성
-    public String createPath(String storeFilename) {
-        return filePath + storeFilename;
-    }
+//    // 파일 경로 구성
+//    public String createPath(String storeFilename) {
+//        return filePath + storeFilename;
+//    }
 //
 //    /**
 //     *  다른 사람 트리 가져오기

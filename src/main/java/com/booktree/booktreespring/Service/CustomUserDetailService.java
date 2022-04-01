@@ -1,14 +1,14 @@
 package com.booktree.booktreespring.Service;
 
 import com.booktree.booktreespring.Repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
+@AllArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;

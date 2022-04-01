@@ -45,6 +45,9 @@ dependencies {
 	// 파일 변환 의존성
 	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 
+	// firebase admin sdk dependency
+	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
+
 }
 
 tasks.named('test') {
