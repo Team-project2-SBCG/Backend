@@ -10,3 +10,4 @@ public class BooktreeSpringApplication {
 		SpringApplication.run(BooktreeSpringApplication.class, args);
 	}
 }
+
