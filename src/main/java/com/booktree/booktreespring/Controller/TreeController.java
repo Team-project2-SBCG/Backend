@@ -48,13 +48,14 @@ public class TreeController {
     /**
      * 내 트리 정보 가져오기
      */
-    @GetMapping("/tree")
+    @GetMapping("/my-tree")
     @ResponseBody
     public Tree getTreeController(){
+        System.out.println("내 트리 정보를 가져옵니다.");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = ((UserDetails) principal).getUsername();
-
+        // 여기 트리 없을 경우 에러처리 해줘야함.
         Optional<Tree> tree = treeRepository.findByUserName(username);
         return tree.get();
     }
@@ -62,9 +63,10 @@ public class TreeController {
     /**
      * 트리가 소유한 책 목록 반환
      **/
-    @GetMapping("/tree/decoration")
+    @GetMapping("/tree/books")
     @ResponseBody
     public List<Book> getDecorationController(@RequestBody String ownerName){
+        System.out.println("트리가 소유한 책 목록 요청입니다.");
         List<Book> findBook = bookRepository.findByOwnerName(ownerName);
         return findBook;
     }
@@ -75,6 +77,7 @@ public class TreeController {
     @PostMapping("/tree")
     @ResponseBody
     public Tree makeTreeController(@RequestBody TreeDto treeDto){
+        System.out.println("최초 트리 생성 요청입니다.");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = ((UserDetails) principal).getUsername();
@@ -92,7 +95,9 @@ public class TreeController {
      * 트리 기본 정보 수정하기 - 구현 완료.
      */
     @PutMapping("/tree")
+    @ResponseBody
     public ResponseEntity<? extends BasicResponse> updateTreeController(@RequestBody TreeUpdateDto treeUpdateDto){
+        System.out.println("트리 기본 정보 수정 요청입니다.");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = ((UserDetails) principal).getUsername();
@@ -114,6 +119,7 @@ public class TreeController {
     @PostMapping("/tree/book")
     @ResponseBody
     public Book addBookController(@ModelAttribute BookDto bookDto) throws IOException, FirebaseAuthException {
+        System.out.println("트리에 장식 달기 요청입니다.");
         MultipartFile multipartFile = bookDto.getFile();
         String filename = UUID.randomUUID().toString() + ".jpg";
         String url = fireBaseService.uploadFiles(multipartFile, filename);
@@ -136,7 +142,8 @@ public class TreeController {
      */
     @PostMapping("/tree/like")
     @ResponseBody
-    public Tree treeLikeController(@RequestBody String ownerName){
+    public Tree treeLikeController(@RequestBody String ownerName){ // @RequestBody 이거 객체 받는걸로 바꾸자.
+        System.out.println("트리 좋아요 요청입니다.");
         Optional<Tree> findTree = treeRepository.findByUserName(ownerName);
         Tree tree = findTree.get();
         tree.setUpCnt(tree.getUpCnt() + 1);
@@ -144,34 +151,30 @@ public class TreeController {
     }
 
     /**
-     * 파이어베이스에서 이미지 삭제하기 - 수정해보자.
+     * 장식 삭제하기
      */
     @DeleteMapping("/tree/book")
     @ResponseBody
-    public boolean deleteBookController(@RequestBody String filename){
-        return fireBaseService.deleteFiles(filename);
+    public boolean deleteBookController(@RequestBody Long bookId){
+        System.out.println("트리 장식 삭제 요청입니다.");
+        Optional<Book> findBook = bookRepository.findById(bookId);
+        String fileName= findBook.get().getFilename();
+        bookRepository.deleteById(bookId);
+        return fireBaseService.deleteFiles(fileName);
     }
-
 
     /**
-     * ****************************************************테스트 **********************************
-     * */
-    // 테스트 1
-    @GetMapping("/test/tree")
+     * 트리 삭제하기
+     */
+    @DeleteMapping("/tree")
     @ResponseBody
-    public List<Tree> getTreeControllr(@RequestBody String name){
-        List<Tree> findTree = treeRepository2.findByUserName(name);
-        for(Tree tree: findTree){
-            System.out.println(tree.getTitle());
+    public int deleteTreeController(@RequestBody Long treeId){
+        Tree findTree = treeRepository2.findById(treeId);
+        List<Book> findBooks = bookRepository.findByOwnerName(findTree.getUserName());
+        for(Book book: findBooks){
+            fireBaseService.deleteFiles(book.getFilename()); // 파이어베이스에서 이미지 삭제하기
+            bookRepository.deleteById(book.getId());
         }
-        return findTree;
-    }
-
-    // 테스트 2
-    @GetMapping("/test2/tree")
-    @ResponseBody
-    public Tree getTreeByIdControllr(@RequestBody Long id){
-        Tree findTree = treeRepository2.findById(id);
-        return findTree;
+        return treeRepository2.deleteById(treeId);
     }
 }

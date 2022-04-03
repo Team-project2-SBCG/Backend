@@ -12,4 +12,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByOwnerName(String ownerName);
     @Override
     Optional<Book> findById(Long aLong);
+
+    @Override
+    void deleteById(Long aLong);
 }

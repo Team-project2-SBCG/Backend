@@ -27,9 +27,10 @@ public class ProfileController {
     /**
      * 사용자 프로필 반환 api
      */
-    @PostMapping("/userInfo")
+    @PostMapping("/user-profile")
     @ResponseBody
     public ProfileDto getUserProfile(){
+        System.out.println("사용자 프로필 요청입니다.");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = ((UserDetails) principal).getUsername();
@@ -46,9 +47,10 @@ public class ProfileController {
     /**
      * 사용자 아이디 변경 api
      */
-    @PutMapping("/userInfo")
+    @PutMapping("/user-profile")
     @ResponseBody
     public ProfileDto updateUserProfile(@RequestBody String newName){
+        System.out.println("사용자 아이디 변경 요청입니다.");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = ((UserDetails) principal).getUsername();

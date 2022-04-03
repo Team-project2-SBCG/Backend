@@ -11,4 +11,5 @@ public interface TreeRepository extends JpaRepository<Tree, String> {
     @Override
     Tree save(Tree entity);
     Optional<Tree> findByUserName(String username);
+
 }

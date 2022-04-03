@@ -38,6 +38,7 @@ public class LoginController {
     @PostMapping("/join")
     @ResponseBody
     public ResponseEntity<? extends BasicResponse> join(@RequestBody SignInDto signInDto) {
+        System.out.println("회원가입 요청입니다.");
         Optional<User> result = userRepository.findByUserName(signInDto.getUsername());
         if(result.isPresent()){
             return ResponseEntity.ok().body(new ErrorResponse("이미 존재하는 아이디입니다."));
@@ -55,6 +56,7 @@ public class LoginController {
     @PostMapping("/login")
     @ResponseBody
     public String login(@RequestBody SignInDto signInDto) {
+        System.out.println("로그인 요청입니다.");
         User member = userRepository.findByUserName(signInDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
         if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
@@ -69,7 +71,7 @@ public class LoginController {
     @PostMapping("/withdraw")
     @ResponseBody
     public boolean withdraw(@RequestBody SignInDto signInDto){
-        System.out.println("회원탈퇴를 진행합니다. ");
+        System.out.println("회원탈퇴 요청입니다. ");
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails) principal;
         String username = ((UserDetails) principal).getUsername();
