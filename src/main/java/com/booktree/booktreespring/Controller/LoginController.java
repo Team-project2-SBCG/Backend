@@ -1,5 +1,6 @@
 package com.booktree.booktreespring.Controller;
 
+import com.booktree.booktreespring.Domain.Dto.JwtDto;
 import com.booktree.booktreespring.Domain.Dto.SignInDto;
 import com.booktree.booktreespring.Domain.User;
 import com.booktree.booktreespring.Jwt.JwtTokenProvider;
@@ -55,14 +56,15 @@ public class LoginController {
      */
     @PostMapping("/login")
     @ResponseBody
-    public String login(@RequestBody SignInDto signInDto) {
+    public JwtDto login(@RequestBody SignInDto signInDto) {
         System.out.println("로그인 요청입니다.");
         User member = userRepository.findByUserName(signInDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
         if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
-        return jwtTokenProvider.createToken(member.getUsername()); // , member.getRoles()
+        JwtDto jwtDto = new JwtDto(jwtTokenProvider.createToken(member.getUsername()));
+        return jwtDto;
     }
 
     /**
