@@ -56,7 +56,7 @@ public class LoginController {
      */
     @PostMapping("/login")
     @ResponseBody
-    public JwtDto login(@RequestBody SignInDto signInDto) {
+    public ResponseEntity<? extends BasicResponse> login(@RequestBody SignInDto signInDto) {
         System.out.println("로그인 요청입니다.");
         User member = userRepository.findByUserName(signInDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
@@ -64,7 +64,7 @@ public class LoginController {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
         JwtDto jwtDto = new JwtDto(jwtTokenProvider.createToken(member.getUsername()));
-        return jwtDto;
+        return ResponseEntity.ok().body(new CommonResponse<>(jwtDto));
     }
 
     /**
