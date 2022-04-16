@@ -54,10 +54,10 @@ public class LoginController {
     /**
      * 로그인 api
      */
-    @PostMapping("/login")
+    @PostMapping("/login1")
     @ResponseBody
-    public ResponseEntity<? extends BasicResponse> login(@RequestBody SignInDto signInDto) {
-        System.out.println("로그인 요청입니다.");
+    public ResponseEntity<? extends BasicResponse> login1(@RequestBody SignInDto signInDto) {
+        System.out.println("1: 로그인 요청입니다.");
         User member = userRepository.findByUserName(signInDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
         if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
@@ -66,6 +66,38 @@ public class LoginController {
         JwtDto jwtDto = new JwtDto(jwtTokenProvider.createToken(member.getUsername()));
         return ResponseEntity.ok().body(new CommonResponse<>(jwtDto));
     }
+
+    /**
+     * 에러 발생으로 인한 테스트 api 3
+     */
+    @PostMapping("/login2")
+    @ResponseBody
+    public JwtDto login2(@RequestBody SignInDto signInDto) {
+        System.out.println("2: 로그인 요청입니다.");
+        User member = userRepository.findByUserName(signInDto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
+        if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+        }
+        JwtDto jwtDto = new JwtDto(jwtTokenProvider.createToken(member.getUsername()));
+        return jwtDto;
+    }
+
+    /**
+     * 에러 발생으로 인한 테스트 api 2
+     */
+    @PostMapping("/login3")
+    @ResponseBody
+    public String login3(@RequestBody SignInDto signInDto) {
+        System.out.println("3: 로그인 요청입니다.");
+        User member = userRepository.findByUserName(signInDto.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
+        if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+        }
+        return jwtTokenProvider.createToken(member.getUsername())
+    }
+
 
     /**
      * 회원탈퇴 api
