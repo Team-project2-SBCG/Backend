@@ -68,7 +68,7 @@ public class LoginController {
     }
 
     /**
-     * 에러 발생으로 인한 테스트 api 3
+     * 에러 발생으로 인한 테스트 api 2
      */
     @PostMapping("/login2")
     @ResponseBody
@@ -84,7 +84,7 @@ public class LoginController {
     }
 
     /**
-     * 에러 발생으로 인한 테스트 api 2
+     * 에러 발생으로 인한 테스트 api 3
      */
     @PostMapping("/login3")
     @ResponseBody
@@ -95,7 +95,7 @@ public class LoginController {
         if (!passwordEncoder.matches(signInDto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
-        return jwtTokenProvider.createToken(member.getUsername())
+        return jwtTokenProvider.createToken(member.getUsername());
     }
 
 
